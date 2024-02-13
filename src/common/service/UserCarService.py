@@ -18,7 +18,7 @@ class UserCarService:
         """
 
         self.cursor.execute(create_table_query)
-        print("Table 'user_cars' created successfully")
+        return "Table 'user_cars' created successfully"
 
     def insert_data(self, id_user, car_name):
         self.cursor.execute("INSERT INTO user_cars (id_user, carname) VALUES (?, ?)",
@@ -31,7 +31,7 @@ class UserCarService:
         self.cursor.execute(select_query)
 
         for row in self.cursor.fetchall():
-            print(f"ID: {row[0]}, UserID: {row[1]}, Car Name: {row[2]}")
+            return f"ID: {row[0]}, UserID: {row[1]}, Car Name: {row[2]}"
 
     def update_data(self, target, id, id_user, car_name):
         match target:

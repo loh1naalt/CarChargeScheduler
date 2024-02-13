@@ -17,7 +17,7 @@ class StationService:
         """
 
         self.cursor.execute(create_table_query)
-        print("Table 'users' created successfully")
+        return "Table 'users' created successfully"
 
     def insert_data(self, title, address_name, channels_per_station):
         self.cursor.execute("INSERT INTO stations (title, addressname, channels_per_station) VALUES (?, ?, ?)",
@@ -30,7 +30,7 @@ class StationService:
         self.cursor.execute(select_query)
 
         for row in self.cursor.fetchall():
-            print(f"ID: {row[0]}, Title: {row[1]}, Address Name: {row[2]}, Channels per station: {row[3]}")
+            return f"ID: {row[0]}, Title: {row[1]}, Address Name: {row[2]}, Channels per station: {row[3]}"
 
     def update_data(self, target, id, title, address_name, channels_per_station):
         match target:
