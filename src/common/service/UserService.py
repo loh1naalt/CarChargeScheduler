@@ -17,7 +17,7 @@ class UserService:
         """
 
         self.cursor.execute(create_table_query)
-        print("Table 'users' created successfully")
+        return "Table 'users' created successfully"
 
     def insert_data(self, username, password, role):
         self.cursor.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
@@ -30,7 +30,7 @@ class UserService:
         self.cursor.execute(select_query)
 
         for row in self.cursor.fetchall():
-            print(f"ID: {row[0]}, Username: {row[1]}, Password: {row[2]}, Role: {row[3]}")
+            return f"ID: {row[0]}, Username: {row[1]}, Password: {row[2]}, Role: {row[3]}"
 
     def update_data(self, target, id, username, password, role):
         match target:

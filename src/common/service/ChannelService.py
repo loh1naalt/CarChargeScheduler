@@ -20,7 +20,7 @@ class channelservice:
         """
 
         self.cursor.execute(create_table_query)
-        print("Table 'users' created successfully")
+        return "Table 'users' created successfully"
 
     def insert_data(self, id_station, title, price, occupancy):
         self.cursor.execute("INSERT INTO channels (id_station, title, price, occupancy) "
@@ -34,8 +34,8 @@ class channelservice:
         self.cursor.execute(select_query)
 
         for row in self.cursor.fetchall():
-            print(f"ID: {row[0]}, Station_id: {row[1]}, Title: {row[2]}, price: {row[3]}"
-                  f", Occupancy(0 - True, 1 - False): {row[4]}")
+            return f"ID: {row[0]}, Station_id: {row[1]}, Title: {row[2]}, price: {row[3]}" \
+                  f", Occupancy(0 - True, 1 - False): {row[4]}"
 
     def update_data(self, target, id_station, title, price, occupancy):
         match target:
@@ -50,6 +50,6 @@ class channelservice:
                                     (occupancy, id_station))
         self.connection.commit()
 
-    def delete_data(self, title):
-        self.cursor.execute("DELETE FROM channels WHERE title = ?", title)
+    def delete_data(self, id_station):
+        self.cursor.execute("DELETE FROM channels WHERE title = ?", id_station)
         self.connection.commit()

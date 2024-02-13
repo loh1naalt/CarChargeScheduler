@@ -22,7 +22,7 @@ class channel_usercarservice:
         """
 
         self.cursor.execute(create_table_query)
-        print("Table 'users' created successfully")
+        return "Table 'users' created successfully"
 
     def insert_data(self, id_channel, id_user, id_user_car, startcharge, endcharge):
         self.cursor.execute("INSERT INTO channel_usercars (id_channel, id_user, id_user_car, startcharge, endcharge)" 
@@ -36,8 +36,8 @@ class channel_usercarservice:
         self.cursor.execute(select_query)
 
         for row in self.cursor.fetchall():
-            print(f"ID: {row[0]}, ChannelID: {row[1]}, UserID: {row[2]}, CarID: {row[3]}, StartCharge:{row[4]}"
-                  f",EndCharge{row[5]}")
+            return f"ID: {row[0]}, ChannelID: {row[1]}, UserID: {row[2]}, CarID: {row[3]}" \
+                   f", StartCharge:{row[4]} ,EndCharge{row[5]}"
 
     def update_data(self, target, id, id_channel, id_user, id_user_car, startcharge, endcharge):
         match target:
@@ -59,7 +59,7 @@ class channel_usercarservice:
 
         self.connection.commit()
 
-    def delete_data(self, title):
-        self.cursor.execute("DELETE FROM channel_usercars WHERE title = ?", title)
+    def delete_data(self, id_user):
+        self.cursor.execute("DELETE FROM channel_usercars WHERE title = ?", id_user)
         self.connection.commit()
 
