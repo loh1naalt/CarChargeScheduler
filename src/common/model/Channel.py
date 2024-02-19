@@ -1,3 +1,5 @@
+from flask_sqlalchemy import SQLAlchemy
+db = SQLAlchemy()
 class Channel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_station = db.Column(db.Integer, db.ForeignKey('Station.id'), nullable=False)

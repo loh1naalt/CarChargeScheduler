@@ -1,3 +1,4 @@
+from flask_sqlalchemy import SQLAlchemy
 class Station(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), unique=False, nullable=False)

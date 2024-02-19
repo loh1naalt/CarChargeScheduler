@@ -3,7 +3,7 @@ import sqlite3
 
 class StationService:
     def __init__(self):
-        self.connection = sqlite3.connect("your_database_name.db")
+        self.connection = sqlite3.connect("ccs.db")
         self.cursor = self.connection.cursor()
 
     def create_table(self):

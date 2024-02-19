@@ -1,0 +1,24 @@
+
+<!DOCTYPE html>
+<html>
+    {% block head %}
+    <head>
+        <title>Car Charge Schedule</title>
+    </head>
+    {% endblock %}
+    <body>
+        {% block body %}
+
+        <div class="login">
+            <h1>Log in into CCS system</h1>
+        </div>
+        <form action="/admin/login" method="POST">
+            <input type="text" name="Username" id="Username">
+            <input type="text" name="Password" id="Password">
+            <input type="submit" value="Login">
+            <input type="submit" value="Register">
+        </form>
+
+        {% endblock %}
+    </body>
+</html>
