@@ -31,7 +31,7 @@ def login():
             if find_users.password == Password and find_users.role == 'admin':
                 return redirect('/admin/index')
             else:
-                return 'wrong password or access denied...' + str(find_users)
+                return 'wrong password or access denied...' #+ str(find_users)
 
                 
         #except db.exc.NoResultFound:
