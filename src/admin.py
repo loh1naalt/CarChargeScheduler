@@ -28,13 +28,15 @@ def login():
                     #return redirect('/admin/index')
                 #else:
                     #return 'wrong login and password... ' + str(row)
-            if find_users.password == Password:
+            if find_users.password == Password and find_users.role == 'admin':
                 return redirect('/admin/index')
             else:
-                return 'wrong login and password...' + str(find_users)
+                return 'wrong password or access denied...' + str(find_users)
 
                 
         #except db.exc.NoResultFound:
+        except AttributeError:
+            return 'wrong login...'
         except Exception as e:
             return str(e)
     else:
