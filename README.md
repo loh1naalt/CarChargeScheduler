@@ -1,7 +1,0 @@
-# CarChargeScheduler
-
-
-
-## Getting started
-
-...

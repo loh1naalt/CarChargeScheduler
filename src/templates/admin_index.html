@@ -1,18 +1,37 @@
 <!DOCTYPE html>
 <html>
+
     {% block head %}
+
     <head>
+
         <title>Car Charge Schedule</title>
+
     </head>
+
     {% endblock %}
+
     <body>
+
         {% block body %}
 
-        {% if username != 0 %}
+        {% if username != '' %}
 
-        <t1>Welcome back! {{ username }}</t1>
+        <h1>Welcome back! {{ username }}</h1>
+        
+        <form action="/admin/index" method="post">
 
+            <input type="submit" name="station" value="station managment">
+
+            <input type="submit" name="channel" value="channel managment">
+
+        </form>
+
+        <div id="content">{% block content %}{% endblock %}</div>
+        
         {% else %}
+
+        <h1>Welcome to the Car Charge Schedule admin page!</h1>
 
         <a href={{ url_for('login') }}>Log In</a>
 
@@ -21,5 +40,7 @@
         <a href={{ url_for('logout') }}>Log out</a>
 
         {% endblock %}
+
     </body>
+
 </html>

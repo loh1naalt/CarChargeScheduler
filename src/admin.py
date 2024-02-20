@@ -1,5 +1,5 @@
 from flask import render_template, Flask, request, redirect, url_for
-from common.model.User import db, Users
+from common.model.Models import Users, Station, db
 from sqlalchemy.sql import text
 
 
@@ -10,13 +10,26 @@ Username = ''
 
 @app.route('/admin/index', methods = ['POST', 'GET'])
 def index():
-    #return str(Username)
-    return render_template('admin_index.html', username=Username)
+    if request.method == 'POST':
+        if request.form['station'] == 'station managment':
+            return redirect('/admin/station_managment')
+            #return 'hi'
+        else:
+            pass
+    else:        
+        return render_template('admin_index.html', username=Username)
+    
+@app.route('/admin/station_managment')
+def station_managment():
+    exec = text('SELECT * FROM stations')
+    Station_list = db.session.execute(exec)
+    #return str(Station_list)
+    return render_template('admin_station_managment.html', stations=Station_list)
 
 @app.route('/admin/logout')
 def logout():
     global Username
-    Username = 0
+    Username = ''
     return redirect('index') 
 
 
@@ -26,9 +39,9 @@ def login():
         global Username
         Username = request.form['Username']
         Password = request.form['Password']
-        add_user = Users(username = Username,
-                        password = Password,
-                        role = 'admin')
+        #add_user = Users(username = Username,
+        #                password = Password,
+        #                role = 'admin')
         #find_users = db.session.execute(text('SELECT username and password from users'))
         find_users = Users.query.filter_by(username=Username).first()
 

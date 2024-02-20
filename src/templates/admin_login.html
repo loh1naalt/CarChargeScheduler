@@ -9,16 +9,15 @@
     <body>
         {% block body %}
 
-        <div class="login">
-            <h1>Log in into CCS system</h1>
-        </div>
-        <form action="/admin/login" method="POST">
-            <input type="text" name="Username" id="Username">
-            <input type="text" name="Password" id="Password">
-            <input type="submit" value="Login">
-            <input type="submit" value="Register">
-        </form>
-
+            <div class="login">
+                <h1>Log in into CCS system</h1>
+            </div>
+            <form action="/admin/login" method="POST">
+                <input type="text" name="Username" id="Username">
+                <input type="text" name="Password" id="Password">
+                <input type="submit" value="Login">
+            </form>
+            <div id="content">{% block content %}{% endblock %}</div>
         {% endblock %}
     </body>
 </html>
