@@ -33,7 +33,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/vlados/dev/gitproj/carchargescheduler/.venv"
+set -gx VIRTUAL_ENV "/home/vlados/devlp/gitproj/carchargescheduler/.venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

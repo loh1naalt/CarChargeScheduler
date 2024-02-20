@@ -1,1 +1,25 @@
-hi
+<!DOCTYPE html>
+<html>
+    {% block head %}
+    <head>
+        <title>Car Charge Schedule</title>
+    </head>
+    {% endblock %}
+    <body>
+        {% block body %}
+
+        {% if username != 0 %}
+
+        <t1>Welcome back! {{ username }}</t1>
+
+        {% else %}
+
+        <a href={{ url_for('login') }}>Log In</a>
+
+        {% endif %}
+
+        <a href={{ url_for('logout') }}>Log out</a>
+
+        {% endblock %}
+    </body>
+</html>

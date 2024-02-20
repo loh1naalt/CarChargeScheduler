@@ -1,4 +1,4 @@
-#!/home/vlados/dev/gitproj/carchargescheduler/.venv/bin/python3
+#!/home/vlados/devlp/gitproj/carchargescheduler/.venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

@@ -1,4 +1,4 @@
-from flask import render_template, Flask, request, redirect
+from flask import render_template, Flask, request, redirect, url_for
 from common.model.User import db, Users
 from sqlalchemy.sql import text
 
@@ -6,14 +6,24 @@ from sqlalchemy.sql import text
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///ccs.db"
 db.init_app(app)
+Username = ''
 
 @app.route('/admin/index', methods = ['POST', 'GET'])
 def index():
-    return render_template('admin_index.html')
+    #return str(Username)
+    return render_template('admin_index.html', username=Username)
+
+@app.route('/admin/logout')
+def logout():
+    global Username
+    Username = 0
+    return redirect('index') 
+
 
 @app.route('/admin/login', methods = ['POST', 'GET'])
 def login():
     if request.method == 'POST':
+        global Username
         Username = request.form['Username']
         Password = request.form['Password']
         add_user = Users(username = Username,
