@@ -19,12 +19,26 @@ def index():
     else:        
         return render_template('admin_index.html', username=Username)
     
-@app.route('/admin/station_managment')
+@app.route('/admin/station_managment', methods = ['POST', 'GET'])
 def station_managment():
-    exec = text('SELECT * FROM stations')
-    Station_list = db.session.execute(exec)
-    #return str(Station_list)
-    return render_template('admin_station_managment.html', stations=Station_list)
+    global Username
+    if Username == '':
+        return redirect('/admin/index')
+    else:
+        exec = text('SELECT * FROM stations')
+        Station_list = db.session.execute(exec)
+        if request.method == 'POST':
+            station_name = request.form['station_name']
+            station_location = request.form['station_location']
+            station_count_of_channels = request.form['station_count_of_channels']
+            add_station = Station(title = station_name,
+                                addressname = station_location,
+                                channels_per_station = station_count_of_channels)
+            db.session.add(add_station)
+            db.session.commit()
+            return redirect('/admin/station_managment')
+        else:
+            return render_template('admin_station_managment.html', stations=Station_list, username=Username)
 
 @app.route('/admin/logout')
 def logout():
