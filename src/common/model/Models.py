@@ -29,8 +29,9 @@ class ChannelUserCar(db.Model):
     endcharge = db.Column(db.DateTime, unique = False, nullable = False)
 
 class Channel(db.Model):
+    __tablename__ = 'channels'
     id = db.Column(db.Integer, primary_key=True)
-    id_station = db.Column(db.Integer, db.ForeignKey('Station.id'), nullable=False)
-    occupancy = db.Column(db.Boolean, unique=False, nullable = False)
+    id_station = db.Column(db.Integer, db.ForeignKey('stations.id'), nullable=False)
+    occupancy = db.Column(db.String(40), unique=False, nullable = False)
     title = db.Column(db.String(120), unique=False, nullable=False)
     price = db.Column(db.String(120), unique=False, nullable=False)
