@@ -75,14 +75,11 @@ def channel_managment():
                     channel_parrent_station = request.form['channel_parrent_station']
                     channel_title = request.form['channel_title']
                     channel_price = request.form['channel_price']
-                    channel_occupancy = request.form['channel_occupancy']
                     #try:
                     add_station = Channel(id_station = channel_parrent_station,
                                         title = channel_title,
-                                        price = channel_price,
-                                        occupancy = channel_occupancy)
-                    if channel_parrent_station and channel_title and channel_price and \
-                    channel_occupancy == '':
+                                        price = channel_price)
+                    if channel_parrent_station and channel_title and channel_price == '':
                         return redirect('/admin/channel_managment')
                     else:
                         db.session.add(add_station)
@@ -93,7 +90,7 @@ def channel_managment():
                 case _:
                     return str(request.form['button'])
         else:
-            return render_template('admin_channel_managment.html', channels=channel_list, username=Username)
+            return render_template('admin_channel_managment.html', channels=channel_list, username=Username, channel_station_name=channel_station_name)
 
 @app.route('/admin/logout')
 def logout():
