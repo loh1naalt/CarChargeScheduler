@@ -1,0 +1,31 @@
+{% extends "admin_index.html" %}
+
+{% block content %}
+
+<table>
+    <tr>
+      <th>parrent station id</th>
+      <th>title of the channel</th>
+      <th>channel price</th>
+      <th>Channel occupancy</th>
+    </tr>
+    <form action="/admin/channel_managment", method="post">
+      {% for i in channels%}
+      <tr>
+          <td><input type="checkbox" name="table" value="{{ i[0] }}">{{i[1]}}</td>
+          <td>{{i[2]}}</td>
+          <td>{{i[3]}}</td>
+          <td>{{i[4]}}</td>
+      </tr>
+      {% endfor %}
+      <tr>
+          <td><input type="text" name="channel_parrent_station"></td>
+          <td><input type="text" name="channel_title"></td>
+          <td><input type="text" name="channel_price"></td>
+          <td><input type="submit" name="button" value="submit changes"></td>
+          <td><input type="submit" name="button" value="remove selected rows"></td>
+      </tr>
+  </form>
+  </table>
+  {{ errormessage }}
+{% endblock %}
