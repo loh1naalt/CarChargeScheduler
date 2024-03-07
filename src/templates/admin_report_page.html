@@ -1,0 +1,32 @@
+{% extends "admin_index.html" %}
+
+{% block content %}
+<form action="/admin/report_page", method="post">
+
+    <select name="station_name_select" class="Input">
+        {% for i in Station_list %}
+        <option value="{{ i[1] }}">{{ i[1] }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="station_location_select" class="Input">
+        {% for i in Station_list %}
+        <option value="{{ i[2] }}">{{ i[2] }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="channel_title_select" class="Input">
+        {% for i in channel_list %}
+        <option value="{{ i[1] }}">{{ i[1] }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="User_select" class="Input">
+        {% for i in user_list %}
+        <option value="{{ i[1] }}">{{ i[1] }}</option>
+        {% endfor %}
+    </select>
+
+    <input type="submit" name="button" value="report">
+</form>
+{% endblock %}

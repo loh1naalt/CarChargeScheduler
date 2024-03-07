@@ -7,6 +7,9 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///ccs.db"
 db.init_app(app)
 Username = ''
+exec_user = text('SELECT * FROM users')
+exec_station = text('SELECT * FROM stations')
+exec_channel = text('SELECT * FROM channels')
 
 @app.route('/admin/index', methods = ['POST', 'GET'])
 def index():
@@ -16,6 +19,8 @@ def index():
                 return redirect('/admin/station_managment')
             case 'channel managment':
                 return redirect('/admin/channel_managment')
+            case 'report':
+                return redirect('/admin/report_page')
             case _:
                 pass
     else:        
@@ -23,12 +28,11 @@ def index():
     
 @app.route('/admin/station_managment', methods = ['POST', 'GET'])
 def station_managment():
-    global Username
+    global Username, Station_list
     if Username == '':
         return redirect('/admin/index')
     else:
-        exec = text('SELECT * FROM stations')
-        Station_list = db.session.execute(exec)
+        Station_list = db.session.execute(exec_station)
         if request.method == 'POST':
             match request.form['button']:
                 case 'remove selected rows':
@@ -57,12 +61,11 @@ def station_managment():
 
 @app.route('/admin/channel_managment', methods = ['POST', 'GET'])
 def channel_managment():
-    global Username
+    global Username, channel_list
     if Username == '':
         return redirect('/admin/index')
     else:
-        exec = text('SELECT * FROM channels')
-        channel_list = db.session.execute(exec)
+        channel_list = db.session.execute(exec_channel)
         if request.method == 'POST':
             match request.form['button']:
                 case 'remove selected rows':
@@ -90,7 +93,25 @@ def channel_managment():
                 case _:
                     return str(request.form['button'])
         else:
-            return render_template('admin_channel_managment.html', channels=channel_list, username=Username, channel_station_name=channel_station_name)
+            return render_template('admin_channel_managment.html', channels=channel_list, username=Username)
+
+@app.route('/admin/report_page', methods = ['POST', 'GET'])
+def report_page():
+    global Username
+    if Username == '':
+        return redirect('/admin/index')
+    else: 
+        Station_list = db.session.execute(exec_station)
+        channel_list = db.session.execute(exec_channel)
+        user_list = db.session.execute(exec_user)
+        if request.method == 'POST':
+            if request.form['button'] == 'report':
+                username = request.form['User_select']
+                return f'user {username} have been reported!'
+        return render_template('admin_report_page.html',
+                                Station_list = Station_list,
+                                channel_list = channel_list,
+                                user_list = user_list)
 
 @app.route('/admin/logout')
 def logout():
