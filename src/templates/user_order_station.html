@@ -1,0 +1,29 @@
+{% extends "user_index.html" %}
+
+{% block content %}
+
+<table>
+    <tr>
+        <th>parrent station id</th>
+        <th>title of the channel</th>
+        <th>channel price</th>
+        <th>Channel occupancy</th>
+        <th>Occupied by</th>
+    </tr>
+    <form action="/user/order_station", method="post">
+      {% for i in channel %}
+      <tr>
+        <td><input type="checkbox" name="table" value="{{ i[0] }}">{{i[1]}}</td>
+        <td>{{i[2]}}</td>
+        <td>{{i[3]}}</td>
+        <td>{{i[4]}}</td>
+        <td>{{i[5]}}</td>
+      </tr>
+      {% endfor %}
+      <tr>
+          <td><input type="submit" name="button" value="Order a station"></td>
+          <td><input type="submit" name="button" value="Release a station"></td>
+      </tr>
+  </form>
+</table>
+{% endblock %}

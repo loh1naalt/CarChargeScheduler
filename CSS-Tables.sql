@@ -20,13 +20,15 @@ CREATE TABLE stations(
     channels_per_station INTEGER
 );
 
-CREATE TABLE channels(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    id_station INTEGER,
-    title TEXT,
-    price REAL,
-    occupancy INTEGER, /*('true', 'false')*/
-    FOREIGN KEY(id_station) REFERENCES stations(id)
+CREATE TABLE "channels" (
+	"id"	INTEGER,
+	"id_station"	INTEGER,
+	"title"	TEXT,
+	"price"	REAL,
+	"occupancy"	INTEGER,
+	"occupiedby"	TEXT,
+	FOREIGN KEY("id_station") REFERENCES "stations"("id"),
+	PRIMARY KEY("id" AUTOINCREMENT)
 );
 
 CREATE TABLE channel_usercars(

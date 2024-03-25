@@ -35,3 +35,4 @@ class Channel(db.Model):
     occupancy = db.Column(db.Boolean, unique=False, nullable = False)
     title = db.Column(db.String(120), unique=False, nullable=False)
     price = db.Column(db.String(120), unique=False, nullable=False)
+    occupiedby = db.Column(db.String(120), unique=False, nullable=False)

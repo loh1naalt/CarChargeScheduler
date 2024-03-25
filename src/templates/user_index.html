@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+    {% block head %}
+
+    <head>
+
+        <title>Car Charge Schedule</title>
+
+    </head>
+
+    {% endblock %}
+
+    <body>
+
+        {% block body %}
+
+        {% if username != '' %}
+
+        <h1>Welcome back! {{ username }}</h1>
+        
+        <form action="/index" method="post">
+
+            <input type="submit" name="index_buttons" value="Order a station">
+
+            <input type="submit" name="index_buttons" value="car managment">
+
+        </form>
+
+        <div id="content">{% block content %}{% endblock %}</div>
+        
+        {% else %}
+
+        <h1>Welcome to the Car Charge Schedule!</h1>
+
+        <a href={{ url_for('login') }}>Log In</a>
+
+        {% endif %}
+
+        <a href={{ url_for('logout') }}>Log out</a>
+
+        {% endblock %}
+
+    </body>
+
+</html>
