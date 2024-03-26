@@ -9,16 +9,16 @@ import common.service.CrudHelper as CrudHelper
 # added CrudHelper module which will slightly improve coding efficency 
 # added Car managment page 
 # now admins are able to swich betwen user and admin page
+# registration into CCS system
+# syncing with channel_usercar (partly)
+# fixed bug where user can enter the admin page
 
 
 # notes
-# Occupancy should be always at FALSE! Set to true only if someone occupies channel
+
 
 # todo
-# make login page for users
-# CRUD car
-# user order page. 
-# commit if done!
+
 
 
 app = Flask(__name__)
@@ -26,6 +26,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///ccs.db"
 db.init_app(app)
 Username = ''
 Username_role = ''
+Username_id = 0
 
 exec_user = text('SELECT * FROM users')
 exec_station = text('SELECT * FROM stations')
@@ -136,7 +137,7 @@ def index():
 @app.route('/admin/station_managment', methods = ['POST', 'GET'])
 def station_managment():
     global Username
-    if Username == '':
+    if Username == '' or Username_role != 'admin':
         return redirect('/index')
     else:
         Station_list = db.session.execute(exec_station)
@@ -169,7 +170,7 @@ def station_managment():
 @app.route('/admin/channel_managment', methods = ['POST', 'GET'])
 def channel_managment():
     global Username, channel_list
-    if Username == '':
+    if Username == '' or Username_role != 'admin':
         return redirect('/index')
     else:
         channel_list = db.session.execute(exec_channel)
@@ -213,7 +214,7 @@ def channel_managment():
 @app.route('/admin/report_page', methods = ['POST', 'GET'])
 def report_page():
     global Username
-    if Username == '':
+    if Username == '' or Username_role != 'admin':
         return redirect('/index')
     else: 
         Station_list = db.session.execute(exec_station)
@@ -226,7 +227,7 @@ def report_page():
         return render_template('admin_report_page.html',
                                 Statist = Station_list,
                                 channel_list = channel_list,
-                                user_list = user_lion_list)
+                                user_list = user_list)
 
 @app.route('/logout')
 def logout():
@@ -239,32 +240,58 @@ def logout():
 @app.route('/login', methods = ['POST', 'GET'])
 def login():
     if request.method == 'POST':
-        global Username, Username_role
+        global Username, Username_role, Username_id
         Username = request.form['Username']
         Password = request.form['Password']
         find_users = Users.query.filter_by(username=Username).first()
-        Username_role = find_users.role
+        if find_users != None:
+            Username_role = find_users.role
+        Username_id = CrudHelper.username(Username).username_to_id()
+        sync_user = CrudHelper.channel_usercars(Username_id).sync_user()
+        match request.form['button']:
+            case 'login':
+                try:
+                    if sync_user == 0:
+                        if find_users.password == Password and find_users.role == 'user':
+                                return redirect('/index')
+                        
+                        elif find_users.password == Password and find_users.role == 'admin':
+                                return redirect('/admin/index')                            
+                        else:
+                            return 'wrong password or access denied...'
+                    else:
+                        return sync_user
 
-        try:
-            if find_users.password == Password and find_users.role == 'user':
-                return redirect('/index')
-            elif find_users.password == Password and find_users.role == 'admin':
-                return redirect('/admin/index')
-            else:
-                return 'wrong password or access denied...'
 
+                        
 
-                
+                except AttributeError:
+                    return 'wrong login...'
+                except Exception as e:
+                    return str(e)
+            case 'register':
+                users = db.session.execute(exec_user)
+                for i in users:
+                    if i[1] == Username:
+                        return f'username {i[1]} exists!'
+                if Username and Password == '':
+                        return redirect('/login')    
+                else:
+                    add_user = Users(username=Username,
+                                    password=Password,
+                                    role = 'user')
+                    db.session.add(add_user)
+                    db.session.commit()
+                    return redirect('/login')
 
-        except AttributeError:
-            return 'wrong login...'
-        except Exception as e:
-            return str(e)
     else:
         return render_template('admin_login.html')
+            
+
 
 @app.route('/test')
 def test():
-    stations = CrudHelper.channel_station_parrent_id_to_name()
+    return f'username is {Username}\n username id is {Username_id}\n username role is {Username_role}'
+    #return CrudHelper.channel_usercars(Username_id).sync_user()
 if __name__ == '__main__':
     app.run(debug=True)

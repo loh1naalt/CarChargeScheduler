@@ -1,4 +1,4 @@
-import sqlite3, os
+import sqlite3, sys
 
 connection = sqlite3.connect("instance/ccs.db", check_same_thread=False)
 cursor = connection.cursor()
@@ -18,12 +18,35 @@ class username:
         for row in cursor.fetchall():
             if row[0] == self.vaule:
                 return row[1]
+            
+
     
-def Update_channel_usercars(id_channel, id_user, id_user_car, startcharge, endcharge):
-        cursor.execute("INSERT INTO channel_usercars (id_channel, id_user, id_user_car, startcharge, endcharge)" 
-                            "VALUES (?, ?, ?, ?, ?)",
-                            (id_channel, id_user, id_user_car, startcharge, endcharge))
-        connection.commit()
+class channel_usercars:
+    def __init__(self, username_id):
+        self.username_id = username_id
+        cursor.execute("SELECT * FROM channel_usercars")
+        self.data = cursor.fetchall()
+    
+    def sync_user(self):
+        if self.data != None:
+            for item in self.data:
+                if item[2] == self.username_id:
+                    return 0
+            else:
+                if self.username_id != None:
+                    cursor.execute(f"INSERT INTO channel_usercars (id_user) VALUES ({self.username_id})")
+                    connection.commit()
+                    return 0
+                else:
+                    pass
+        else:
+            return 'error'
+
+    def sync_user_channel(self):
+        pass
+
+
+
 
 def channel_station_parrent_id_to_name():
     cursor.execute("SELECT * FROM stations")
