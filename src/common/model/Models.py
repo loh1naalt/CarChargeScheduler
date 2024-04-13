@@ -22,10 +22,11 @@ class UserCar(db.Model):
     carname = db.Column(db.String(200), unique=False, nullable=False)
 
 class ChannelUserCar(db.Model):
+    __tablename__ = 'channel_usercars'
     id = db.Column(db.Integer, primary_key=True)
-    id_channel = db.Column(db.Integer, db.ForeignKey('Channel.id'), nullable = False)
-    id_user = db.Column(db.Integer, db.ForeignKey('User.id'), nullable = False)
-    id_user_car = db.Column(db.Integer, db.ForeignKey('UserCar.id'), nullable = False)
+    id_channel = db.Column(db.Integer, db.ForeignKey('channels.id'), nullable = False)
+    id_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable = False)
+    id_user_car = db.Column(db.Integer, db.ForeignKey('user_cars.id'), nullable = False)
     startcharge = db.Column(db.DateTime, unique = False, nullable = False)
     endcharge = db.Column(db.DateTime, unique = False, nullable = False)
 
