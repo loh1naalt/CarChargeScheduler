@@ -4,13 +4,13 @@
 <form action="/admin/report_page", method="post">
 
     <select name="station_name_select" class="Input">
-        {% for i in Station_list %}
+        {% for i in stations %}
         <option value="{{ i[1] }}">{{ i[1] }}</option>
         {% endfor %}
     </select>
 
     <select name="station_location_select" class="Input">
-        {% for i in Station_list %}
+        {% for i in stations %}
         <option value="{{ i[2] }}">{{ i[2] }}</option>
         {% endfor %}
     </select>

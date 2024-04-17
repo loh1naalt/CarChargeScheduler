@@ -1,50 +1,113 @@
-import sqlite3
+import Main
+from common.service.CrudHelper import username
+from common.model.Models import db, Users
+from flask import redirect, request, render_template
+from sqlalchemy import text
 
 
 class UserService:
     def __init__(self):
-        self.connection = sqlite3.connect("ccs.db")
-        self.cursor = self.connection.cursor()
+        self.exec_user = text('SELECT * FROM users')
+        self.exec_station = text('SELECT * FROM stations')
+        self.exec_channel = text('SELECT * FROM channels')
+        self.Mainapp = Main.MainApp
+        self.username = username()
 
-    def create_table(self):
-        create_table_query = """
-        CREATE TABLE users(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT,
-            password TEXT,
-            role TEXT
-        )
-        """
+    def index(self):
+        if request.method == 'POST':
+                match request.form['index_buttons']:
+                    case 'Order a station':
+                        return redirect('/user/order_station')
+                    case 'car managment':
+                        return redirect('/user/add_car')
+                    case 'switch back to admin page':
+                        return redirect('/admin/index')
+                    case _:
+                        pass
+        else:
+            return render_template('user_index.html', username=self.Mainapp.Username,
+                                    Username_role=self.Mainapp.Username_role)
 
-        self.cursor.execute(create_table_query)
-        return "Table 'users' created successfully"
 
-    def insert_data(self, username, password, role):
-        self.cursor.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
-                            (username, password, role))
-        self.connection.commit()
+    def admin_index(self):
+        if request.method == 'POST':
+                match request.form['index_buttons']:
+                    case 'switch to user account':
+                        return redirect('/index')
+                    case 'station managment':
+                        return redirect('/admin/station_managment')
+                    case 'channel managment':
+                        return redirect('/admin/channel_managment')
+                    case 'report':
+                        return redirect('/admin/report_page')
+                    case _:
+                        pass
+        else:
+            return render_template('admin_index.html', username=self.Mainapp.Username,
+                                   user_role=self.Mainapp.Username_id)
 
-    def query_data(self):
-        select_query = "SELECT * FROM users"
+    def logout(self):
+        self.Mainapp.Username = ''
+        self.Mainapp.Username_role = ''
+        return redirect('/index')
 
-        self.cursor.execute(select_query)
+    def login(self):
+        if request.method == 'POST':
+            self.Mainapp.Username = request.form['Username']
+            Password = request.form['Password']
+            find_users = Users.query.filter_by(username=self.Mainapp.Username).first()
+            if find_users is not None:
+                self.Mainapp.Username_role = find_users.role
+            self.Mainapp.Username_id = self.username.username_to_id(self.Mainapp.Username)
+            match request.form['button']:
+                case 'login':
+                    try:
+                        if find_users.password == Password and find_users.role == 'user':
+                            return redirect('/index')
 
-        for row in self.cursor.fetchall():
-            return f"ID: {row[0]}, Username: {row[1]}, Password: {row[2]}, Role: {row[3]}"
+                        elif find_users.password == Password and find_users.role == 'admin':
+                            return redirect('/admin/index')
+                        else:
+                            return 'wrong password or access denied...'
 
-    def update_data(self, target, id, username, password, role):
-        match target:
-            case 'username':
-                self.cursor.execute("UPDATE users SET username = ? WHERE id = ?",
-                                    (username, id))
-            case 'password':
-                self.cursor.execute("UPDATE users SET password = ? WHERE id = ?",
-                                    (password, id))
-            case 'role':
-                self.cursor.execute("UPDATE users SET role = ? WHERE id = ?",
-                                    (role, id))
-        self.connection.commit()
 
-    def delete_data(self, username):
-        self.cursor.execute("DELETE FROM users WHERE username = ?", username)
-        self.connection.commit()
+
+
+
+                    except AttributeError:
+                        return 'wrong login...'
+                    except Exception as e:
+                        return str(e)
+                case 'register':
+                    users = db.session.execute(self.exec_user)
+                    for i in users:
+                        if i[1] == self.Mainapp.Username:
+                            return f'username {i[1]} exists!'
+                    if self.Mainapp.Username and Password == '':
+                        return redirect('/login')
+                    else:
+                        add_user = Users(username=self.Mainapp.Username,
+                                             password=Password,
+                                             role='user')
+                        db.session.add(add_user)
+                        db.session.commit()
+                        return redirect('/login')
+
+        else:
+            return render_template('admin_login.html')
+
+    def report_page(self):
+        if self.Mainapp.Username == '' or self.Mainapp.Username_role != 'admin':
+            return redirect('/index')
+        else:
+            Station_list = db.session.execute(self.exec_station)
+            channel_list = db.session.execute(self.exec_channel)
+            user_list = db.session.execute(self.exec_user)
+            if request.method == 'POST':
+                if request.form['button'] == 'report':
+                    username = request.form['User_select']
+                    return f'user {username} have been reported!'
+            return render_template('admin_report_page.html',
+                                    stations = Station_list,
+                                    channel_list = channel_list,
+                                    user_list = user_list)

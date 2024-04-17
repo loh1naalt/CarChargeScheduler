@@ -1,48 +1,35 @@
-import sqlite3
+import Main
+from common.model.Models import db, Users, UserCar
+from flask import redirect, request, render_template
+from sqlalchemy import text
 
 
 class UserCarService:
     def __init__(self):
-        self.connection = sqlite3.connect("ccs.db")
-        self.cursor = self.connection.cursor()
-
-    def create_table(self):
-        create_table_query = """
-        CREATE TABLE user_cars(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            id_user INTEGER,
-            carname TEXT,
-            FOREIGN KEY(id_user) REFERENCES user_cars(id)
-        )
-
-        """
-
-        self.cursor.execute(create_table_query)
-        return "Table 'user_cars' created successfully"
-
-    def insert_data(self, id_user, car_name):
-        self.cursor.execute("INSERT INTO user_cars (id_user, carname) VALUES (?, ?)",
-                            (id_user, car_name))
-        self.connection.commit()
-
-    def query_data(self):
-        select_query = "SELECT * FROM user_cars"
-
-        self.cursor.execute(select_query)
-
-        for row in self.cursor.fetchall():
-            return f"ID: {row[0]}, UserID: {row[1]}, Car Name: {row[2]}"
-
-    def update_data(self, target, id, id_user, car_name):
-        match target:
-            case 'user_id':
-                self.cursor.execute("UPDATE user_cars SET id_user = ? WHERE id = ?",
-                                    (id_user, id))
-            case 'password':
-                self.cursor.execute("UPDATE user_cars SET car_name = ? WHERE id = ?",
-                                    (car_name, id))
-        self.connection.commit()
-
-    def delete_data(self, id_user):
-        self.cursor.execute("DELETE FROM user_cars WHERE id = ?", id_user)
-        self.connection.commit()
+        self.Mainapp = Main.MainApp
+        self.exec_usercars_individual = text(f'SELECT * FROM user_cars WHERE id_user = {self.Mainapp.Username_id}')
+    def add_car(self):
+        if self.Mainapp.Username == '':
+            return redirect('/index')
+        else:
+            channel_usercars_list = db.session.execute(self.exec_usercars_individual)
+            if request.method == 'POST':
+                match request.form['button']:
+                    case 'add car':
+                        car_name = request.form['car_name']
+                        add_car = UserCar(id_user = self.Mainapp.Username_id,
+                                          carname = car_name)
+                        if car_name == '':
+                            return redirect('/user/add_car')
+                        else:
+                            db.session.add(add_car)
+                            db.session.commit()
+                            return redirect('/user/add_car')
+                    case 'remove car':
+                        markers = request.form.getlist("table")
+                        for i in markers:
+                            UserCar.query.filter_by(id=i).delete()
+                            db.session.commit()
+                        return redirect('/user/add_car')
+            else:
+                return render_template('user_add_car.html', channel_usercars_list=channel_usercars_list)

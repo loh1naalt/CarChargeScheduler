@@ -1,50 +1,41 @@
-import sqlite3
-
+import Main
+from common.model.Models import db, Station
+from flask import redirect, request, render_template
+from sqlalchemy import text
 
 class StationService:
     def __init__(self):
-        self.connection = sqlite3.connect("ccs.db")
-        self.cursor = self.connection.cursor()
+        self.exec_station = text('SELECT * FROM stations')
+        self.Mainapp = Main.MainApp
 
-    def create_table(self):
-        create_table_query = """
-        CREATE TABLE stations(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT,
-            addressname TEXT,
-            channels_per_station INTEGER
-        )
-        """
-
-        self.cursor.execute(create_table_query)
-        return "Table 'users' created successfully"
-
-    def insert_data(self, title, address_name, channels_per_station):
-        self.cursor.execute("INSERT INTO stations (title, addressname, channels_per_station) VALUES (?, ?, ?)",
-                            (title, address_name, channels_per_station))
-        self.connection.commit()
-
-    def query_data(self):
-        select_query = "SELECT * FROM stations"
-
-        self.cursor.execute(select_query)
-
-        for row in self.cursor.fetchall():
-            return f"ID: {row[0]}, Title: {row[1]}, Address Name: {row[2]}, Channels per station: {row[3]}"
-
-    def update_data(self, target, id, title, address_name, channels_per_station):
-        match target:
-            case 'title':
-                self.cursor.execute("UPDATE stations SET title = ? WHERE id = ?",
-                                    (title, id))
-            case 'addressname':
-                self.cursor.execute("UPDATE stations SET addressname = ? WHERE id = ?",
-                                    (address_name, id))
-            case 'channels_per_station':
-                self.cursor.execute("UPDATE stations SET channels_per_station = ? WHERE id = ?",
-                                    (channels_per_station, id))
-        self.connection.commit()
-
-    def delete_data(self, title):
-        self.cursor.execute("DELETE FROM stations WHERE title = ?", title)
-        self.connection.commit()
+    def station_managment(self):
+        if self.Mainapp.Username == '' or self.Mainapp.Username_role != 'admin':
+            return redirect('/index')
+        else:
+            Station_list = db.session.execute(self.exec_station)
+            if request.method == 'POST':
+                match request.form['button']:
+                    case 'remove selected rows':
+                        markers = request.form.getlist("table")
+                        for i in markers:
+                            Station.query.filter_by(id=i).delete()
+                            db.session.commit()
+                        return redirect('/admin/station_managment')
+                    case 'submit changes':
+                        station_name = request.form['station_name']
+                        station_location = request.form['station_location']
+                        station_count_of_channels = request.form['station_count_of_channels']
+                        add_station = Station(title = station_name,
+                                            addressname = station_location,
+                                            channels_per_station = station_count_of_channels)
+                        if station_name and station_location and station_count_of_channels == '':
+                            return redirect('/admin/station_managment')
+                        else:
+                            db.session.add(add_station)
+                            db.session.commit()
+                            return redirect('/admin/station_managment')
+                    case _:
+                        return str(request.form['button'])
+            else:
+                return render_template('admin_station_managment.html', stations=Station_list,
+                                       username=self.Mainapp.Username)
