@@ -6,25 +6,16 @@ import common.service.CrudHelper as CrudHelper
 from common.service import UserService, ChannelService, UserCarService, StationService
 
 # changelog
-# User.py will be merged to Admin.py, hence, Admin.py will be renamed to Main.py. Since development server can not handle two application at once.
-# added occupiedby column to Channel table in ccs.sql
-# added CrudHelper module which will slightly improve coding efficency 
-# added Car managment page 
-# now admins are able to swich betwen user and admin page
-# registration into CCS system
-# syncing with channel_usercar (partly)
-# fixed bug where user can enter the admin page
+# this code have been rewritten (From now this file server as controller, the functions are in the scripts on service folder)
 
 
-# notes
 
 
 # todo
 # sort non-occupied channels
-# some exeptions at Car_select
+# some exceptions at Car_select
 # parrent station id sorting
-# full reform of the code
-# static variables of class
+
 # bootstrap
 
 
