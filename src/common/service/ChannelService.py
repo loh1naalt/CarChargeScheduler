@@ -5,14 +5,14 @@ from sqlalchemy import text
 
 class ChannelService:
     def __init__(self):
-        self.exec_channel = text('SELECT * FROM channels')
         self.Mainapp = Main.MainApp
+        self.exec_channel_non_occupied = text('SELECT * FROM channels WHERE occupancy = 0 ORDER BY id_station ASC')
     def order_station(self):
         exec_usercars_filtered = text(f'SELECT * FROM user_cars WHERE id_user = {self.Mainapp.Username_id}')
         if self.Mainapp.Username == '':
             return redirect('/index')
         else:
-            channel_list = db.session.execute(self.exec_channel)
+            channel_list = db.session.execute(self.exec_channel_non_occupied)
             car_list = db.session.execute(exec_usercars_filtered)
             if request.method == 'POST':
                 match request.form['button']:
@@ -59,6 +59,14 @@ class ChannelService:
                                 return "You can't release station, which you didn't occupied!"
 
                         return redirect('/user/order_station')
+                    case 'show occupied channels by you':
+                        filter_occupied_ch = text(f"SELECT * FROM channels WHERE occupiedby = '{self.Mainapp.Username}'")
+                        filter_occupied_channels_by_user = db.session.execute(filter_occupied_ch)
+                        return render_template('user_order_stations_show_occupied_stations.html',
+                                               channel=channel_list,
+                                               channel_filtered=filter_occupied_channels_by_user,
+                                               username=self.Mainapp.Username,
+                                               car_list=car_list)
                     case _:
                         return str(request.form['button'])
             else:
@@ -105,3 +113,5 @@ class ChannelService:
             else:
                 return render_template('admin_channel_managment.html', channels=channel_list
                                        , username=self.Mainapp.Username) #channel_station_name=channel_station_name)
+
+

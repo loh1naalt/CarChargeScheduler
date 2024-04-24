@@ -1,0 +1,26 @@
+{% extends "user_order_station.html" %}
+
+{% block user_order_station_occupied %}
+
+
+<tr>
+    <th>station id</th>
+    <th>title of the channel</th>
+    <th>channel price</th>
+    <th>Channel occupancy</th>
+    <th>Occupied by</th>
+</tr>
+<tr>
+    {% for i in channel_filtered %}
+        <td><input type="checkbox" name="table" value="{{ i[0] }}">{{i[1]}}</td>
+        <td>{{i[2]}}</td>
+        <td>{{i[3]}}</td>
+        <td>{{i[4]}}</td>
+        <td>{{i[5]}}</td>
+    {% endfor %}
+</tr>
+<tr>
+    <td><input type="submit" name="button" value="Release a station"></td>
+</tr>
+
+{% endblock %}

@@ -3,15 +3,15 @@
 {% block content %}
 
 <table>
+    <form action="/user/order_station", method="post">
     <tr>
-        <th>parrent station id</th>
+        <th>station id</th>
         <th>title of the channel</th>
-        <th>channel price</th>
+        <th><input type="button" name="button" value="sort channel price"></th>
         <th>Channel occupancy</th>
         <th>Occupied by</th>
         <th>Select car which will be charged</th>
     </tr>
-    <form action="/user/order_station", method="post">
       {% for i in channel %}
       <tr>
         <td><input type="checkbox" name="table" value="{{ i[0] }}">{{i[1]}}</td>
@@ -19,18 +19,23 @@
         <td>{{i[3]}}</td>
         <td>{{i[4]}}</td>
         <td>{{i[5]}}</td>
-        <td>
+
+      </tr>
+      {% endfor %}
+      <tr>
+          <td><input type="submit" name="button" value="Order a station"></td>
+          <td><input type="submit" name="button" value="show occupied channels by you"></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>
             <select name="Car_selection" class="Input">
             {% for item in car_list %}
                   <option value="{{ item[0] }}">{{ item[2] }}
             {% endfor %}
             </select>
-        </td>
-      </tr>
-      {% endfor %}
-      <tr>
-          <td><input type="submit" name="button" value="Order a station"></td>
-          <td><input type="submit" name="button" value="Release a station"></td>
+          </td>
+          <div id="user_order_station_occupied">{% block user_order_station_occupied %}{% endblock %}</div>
       </tr>
   </form>
 </table>

@@ -70,27 +70,8 @@ class username:
             
 
     
-class channel_usercars:
-    def __init__(self, username_id):
-        self.data = fetch_query_with_retry("SELECT * FROM channel_usercars")
-        self.username_id = username_id
-    
-    def sync_user(self):
-        if self.data != None:
-            for item in self.data:
-                if item[2] == self.username_id:
-                    return 0
-                
-            if self.username_id != None:
-                execute_query_with_retry("INSERT INTO channel_usercars (id_user) VALUES (?)",
-                               (self.username_id, ))
-                return 0
-            else:
-                return 0
-        else:
-            return 'error'
+class sort_channel:
+    def __init__(self):
+        pass
 
 
-            
-#if __name__ == '__main__':
-    #print(username_to_id('loh1na'))
