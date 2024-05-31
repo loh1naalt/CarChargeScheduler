@@ -49,22 +49,33 @@ def fetch_query_with_retry(query):
         raise Exception("Failed to execute query after multiple attempts")
 
 
-class username:
-    def __init__(self):
-        pass
 
-    def username_to_id(self, vaule):
-        data = fetch_query_with_retry("SELECT * FROM users")
-        for row in data:
-            if row[1] == vaule:
-                return row[0]
-
+def username_to_id(vaule):
+    data = fetch_query_with_retry("SELECT * FROM users")
+    for row in data:
+        if row[1] == vaule:
+            return row[0]
             
-    def id_to_username(self, vaule):
-        data = fetch_query_with_retry("SELECT * FROM users")
-        for row in data:
-            if row[0] == vaule:
-                return row[1]
+def id_to_username(vaule):
+    data = fetch_query_with_retry("SELECT * FROM users")
+    for row in data:
+        if row[0] == vaule:
+            return row[1]
+
+
+
+def stationname_to_id(vaule):
+    data = fetch_query_with_retry("SELECT * FROM stations")
+    for row in data:
+        if row[1] == vaule:
+            return row[0]
+
+def id_to_stationname(self, vaule):
+    data = fetch_query_with_retry("SELECT * FROM stations")
+    for row in data:
+        if row[0] == vaule:
+            return row[1]
+
 
 
             

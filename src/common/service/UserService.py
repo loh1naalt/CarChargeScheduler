@@ -1,6 +1,6 @@
 import Main
-from common.service.CrudHelper import username
-from common.model.Models import db, Users
+import common.service.CrudHelper as Crudhelper
+from common.model.Models import db, Users, ReportedUsersList
 from flask import redirect, request, render_template
 from sqlalchemy import text
 
@@ -8,10 +8,10 @@ from sqlalchemy import text
 class UserService:
     def __init__(self):
         self.exec_user = text('SELECT * FROM users')
-        self.exec_station = text('SELECT * FROM stations')
+        self.exec_station_id = text('SELECT id FROM stations')
+        self.exec_station_address = text('SELECT addressname FROM stations')
         self.exec_channel = text('SELECT * FROM channels')
         self.Mainapp = Main.MainApp
-        self.username = username()
 
     def index(self):
         if request.method == 'POST':
@@ -58,7 +58,7 @@ class UserService:
             find_users = Users.query.filter_by(username=self.Mainapp.Username).first()
             if find_users is not None:
                 self.Mainapp.Username_role = find_users.role
-            self.Mainapp.Username_id = self.username.username_to_id(self.Mainapp.Username)
+            self.Mainapp.Username_id = Crudhelper.username_to_id(self.Mainapp.Username)
             match request.form['button']:
                 case 'login':
                     try:
@@ -100,14 +100,32 @@ class UserService:
         if self.Mainapp.Username == '' or self.Mainapp.Username_role != 'admin':
             return redirect('/index')
         else:
-            Station_list = db.session.execute(self.exec_station)
+            Station_list_id = db.session.execute(self.exec_station_id)
+            Station_list_address = db.session.execute(self.exec_station_address)
             channel_list = db.session.execute(self.exec_channel)
             user_list = db.session.execute(self.exec_user)
             if request.method == 'POST':
                 if request.form['button'] == 'report':
-                    username = request.form['User_select']
-                    return f'user {username} have been reported!'
+                    station_name = request.form['station_name_select']
+                    station_location = request.form['station_location_select']
+                    channel_id = request.form['channel_title_select']
+                    Username = request.form['User_select']
+                    Username_id_selected = Crudhelper.username_to_id(Username)
+
+                    report = ReportedUsersList(
+                        id_station = station_name,
+                        station_address = station_location,
+                        id_channel = channel_id,
+                        id_user = Username_id_selected,
+                        additional_tip = ''
+                    )
+
+                    db.session.add(report)
+                    db.session.commit()
+                    return redirect('/admin/report_page')
+
             return render_template('admin_report_page.html',
-                                    stations = Station_list,
+                                    stations_id = Station_list_id,
+                                    stations_address = Station_list_address,
                                     channel_list = channel_list,
                                     user_list = user_list)
