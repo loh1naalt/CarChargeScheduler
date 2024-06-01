@@ -67,10 +67,16 @@ class MainApp:
     def report_page():
         userservice = UserService.UserService()
         return userservice.report_page()
+
+    @app.route('/admin/reported_users', methods = ['POST', 'GET'])
+    def reported_users():
+        userservice = UserService.UserService()
+        return userservice.reported_users()
     @app.route('/index', methods=['POST', 'GET'])
     def index():
         userservice = UserService.UserService()
         return userservice.index()
+
 
 # @app.route('/test')
 # def test():

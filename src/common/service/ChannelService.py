@@ -77,7 +77,7 @@ class ChannelService:
         if self.Mainapp.Username == '' or self.Mainapp.Username_role != 'admin':
             return redirect('/index')
         else:
-            channel_list = db.session.execute(self.exec_channel)
+            channel_list = db.session.execute(self.exec_channel_non_occupied)
             if request.method == 'POST':
                 match request.form['button']:
                     case 'remove selected rows':

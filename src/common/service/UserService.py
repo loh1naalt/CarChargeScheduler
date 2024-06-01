@@ -11,6 +11,7 @@ class UserService:
         self.exec_station_id = text('SELECT id FROM stations')
         self.exec_station_address = text('SELECT addressname FROM stations')
         self.exec_channel = text('SELECT * FROM channels')
+        self.exec_reported_user_list = text('SELECT * FROM reported_users_list')
         self.Mainapp = Main.MainApp
 
     def index(self):
@@ -40,6 +41,8 @@ class UserService:
                         return redirect('/admin/channel_managment')
                     case 'report':
                         return redirect('/admin/report_page')
+                    case 'reported users':
+                        return redirect('/admin/reported_users')
                     case _:
                         pass
         else:
@@ -110,6 +113,7 @@ class UserService:
                     station_location = request.form['station_location_select']
                     channel_id = request.form['channel_title_select']
                     Username = request.form['User_select']
+                    additional_tip = request.form['textfeild']
                     Username_id_selected = Crudhelper.username_to_id(Username)
 
                     report = ReportedUsersList(
@@ -117,7 +121,7 @@ class UserService:
                         station_address = station_location,
                         id_channel = channel_id,
                         id_user = Username_id_selected,
-                        additional_tip = ''
+                        additional_tip = additional_tip
                     )
 
                     db.session.add(report)
@@ -129,3 +133,17 @@ class UserService:
                                     stations_address = Station_list_address,
                                     channel_list = channel_list,
                                     user_list = user_list)
+    def reported_users(self):
+        if self.Mainapp.Username == '' or self.Mainapp.Username_role != 'admin':
+            return redirect('/index')
+        else:
+            ReportedUserslist = db.session.execute(self.exec_reported_user_list)
+            if request.method == 'POST':
+                if request.form['button'] == 'remove':
+                    markers = request.form.getlist("table")
+                    for i in markers:
+                        ReportedUsersList.query.filter_by(id=i).delete()
+                        db.session.commit()
+                    return redirect('/admin/reported_users')
+
+            return render_template('admin_reported_users_page.html', reported_users_list = ReportedUserslist)
