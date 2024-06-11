@@ -3,6 +3,8 @@
 <html>
     {% block head %}
     <head>
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/css/bootstrap.css') }}">
+
         <title>Car Charge Schedule</title>
     </head>
     {% endblock %}
@@ -10,14 +12,19 @@
         {% block body %}
 
             <div class="login">
-                <h1>Log in into CCS system</h1>
+                <p class="text-center fs-1">Welcome to the Car charge schedule!</p>
             </div>
             <form action="/login" method="POST">
-                <input type="text" name="Username" id="Username">
-                <input type="text" name="Password" id="Password">
-                <input type="submit" name="button" value="login">
-                <input type="submit" name="button" value="register">
+                <div class="d-flex flex-sm-column bd-highlight mb-3 justify-content-center">
+                <input type="text" name="Username" id="Username" class="p-2 bd-highlight mx-auto">
+                <input type="text" name="Password" id="Password" class="p-2 bd-highlight mx-auto">
+                <input type="submit" name="button" value="login" class="p-2 bd-highlight mx-auto btn btn-primary" style="width: 217px;">
+                <input type="submit" name="button" value="register" class="p-2 bd-highlight mx-auto btn btn-secondary" style="width: 217px;">
+                </div>
             </form>
         {% endblock %}
+        <script src="{{ url_for('static',filename='scripts/js/bootstrap.js') }}"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
     </body>
 </html>

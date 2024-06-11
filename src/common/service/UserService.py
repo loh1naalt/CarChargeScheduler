@@ -17,6 +17,10 @@ class UserService:
     def index(self):
         if request.method == 'POST':
                 match request.form['index_buttons']:
+                    case 'log in':
+                        return redirect('/login')
+                    case 'log out':
+                        return redirect('/logout')
                     case 'Order a station':
                         return redirect('/user/order_station')
                     case 'car managment':
@@ -33,6 +37,10 @@ class UserService:
     def admin_index(self):
         if request.method == 'POST':
                 match request.form['index_buttons']:
+                    case 'log in':
+                        return redirect('/login')
+                    case 'log out':
+                        return redirect('/logout')
                     case 'switch to user account':
                         return redirect('/index')
                     case 'station managment':

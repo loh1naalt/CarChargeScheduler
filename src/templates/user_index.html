@@ -5,6 +5,8 @@
 
     <head>
 
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/css/bootstrap.css') }}">
+
         <title>Car Charge Schedule</title>
 
     </head>
@@ -16,43 +18,81 @@
         {% block body %}
             
         {% if Username_role == 'admin' and username != '' %}
-
-        <h1>Welcome back! {{ username }}</h1>
-
         <form action="/index" method="post">
 
-            <input type="submit" name="index_buttons" value="Order a station">
-
-            <input type="submit" name="index_buttons" value="car managment">
-
-            <input type="submit" name="index_buttons" value="switch back to admin page">
-
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <a class="navbar-brand disabled" href="/index">Car Charge Scheduler</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" href="/user/order_station">Order Station</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user/add_car">Car Management</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/admin/index">Switch Back to user account</a>
+              </li>
+                <input type="submit" name="index_buttons" value="log out" class="btn btn-danger">
+            </ul>
+          </div>
+        </nav>
         </form>
+
 
         {% elif username != '' %}
 
-        <h1>Welcome back! {{ username }}</h1>
-        
         <form action="/index" method="post">
-
-            <input type="submit" name="index_buttons" value="Order a station">
-
-            <input type="submit" name="index_buttons" value="car managment">
-
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <a class="navbar-brand" href="/index">Car Charge Scheduler</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav_user">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" href="/user/order_station">Order Station</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/user/add_car">Car Management</a>
+              </li>
+                <input type="submit" name="index_buttons" value="log out" class="btn btn-danger">
+            </ul>
+          </div>
+        </nav>
         </form>
+        
+
         <div id="content">{% block content %}{% endblock %}</div>
         
         {% else %}
 
-        <h1>Welcome to the Car Charge Schedule!</h1>
 
-        <a href={{ url_for('login') }}>Log In</a>
+
+        <form action="/index" method="post">
+
+
+
+            <input type="submit" name="index_buttons" value="log in" class="btn btn-dark">
+
+            <input type="submit" name="index_buttons" value="log out" class="btn btn-danger">
+
+            <p class="text-center fs-1">Welcome to the Car charge schedule!</p>
+
+
+
+        </form>
+
 
         {% endif %}
 
-        <a href={{ url_for('logout') }}>Log out</a>
-
         {% endblock %}
+        <script src="{{ url_for('static',filename='scripts/js/bootstrap.js') }}"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
 
     </body>
 
