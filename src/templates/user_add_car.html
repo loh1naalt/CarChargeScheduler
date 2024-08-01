@@ -1,0 +1,23 @@
+{% extends "user_index.html" %}
+
+{% block content %}
+
+<table>
+    <tr>
+      <th>carname</th>
+    </tr>
+    <form action="/user/add_car", method="post">
+      {% for i in channel_usercars_list%}
+      <tr>
+          <td><input type="checkbox" name="table" value="{{ i[0] }}">{{i[2]}}</td>
+
+      </tr>
+      {% endfor %}
+      <tr>
+          <td><input type="text" name="car_name"></td>
+          <td><input type="submit" name="button" value="add car"></td>
+          <td><input type="submit" name="button" value="remove car"></td>
+      </tr>
+  </form>
+  </table>
+{% endblock %}
